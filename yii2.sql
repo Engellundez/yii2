@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 05-03-2020 a las 22:58:23
+-- Tiempo de generación: 05-03-2020 a las 23:45:17
 -- Versión del servidor: 5.7.24
 -- Versión de PHP: 7.2.19
 
@@ -25,6 +25,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `alumnos`
+--
+
+CREATE TABLE `alumnos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `paterno` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `materno` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `sexo` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `curp` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `telefono` int(10) NOT NULL,
+  `carrera_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `area`
 --
 
@@ -39,7 +56,20 @@ CREATE TABLE `area` (
 
 INSERT INTO `area` (`id`, `nombre`) VALUES
 (1, 'DOCENTES'),
-(2, 'ADMINISTRATIVO');
+(2, 'ADMINISTRATIVO'),
+(3, 'COORDINADOR');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `calificacion`
+--
+
+CREATE TABLE `calificacion` (
+  `id_clase` int(11) NOT NULL,
+  `id_alumno` int(11) NOT NULL,
+  `calificacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -69,6 +99,31 @@ INSERT INTO `campus` (`id`, `nombre`, `calle`, `colonia`, `numero`, `codigoPosta
 (3, 'Acapulco', 'acapulco', 'pedregal', '8552', '887433', '446688745631', 'Acapulco', 'Veracurz'),
 (4, 'Sinaloa', 'sinaloa', 'sinaloa', '4566449', '4564', '991343435354', 'Sinaloa', 'Sonora'),
 (5, 'Guadalajara', 'buen aventura', 'no se', '449463422', '853004', '456558235552', 'Guadalajara', 'Jalisco');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `carrera`
+--
+
+CREATE TABLE `carrera` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `coordinado_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clase`
+--
+
+CREATE TABLE `clase` (
+  `id` int(11) NOT NULL,
+  `id_profesor` int(11) NOT NULL,
+  `id_materia` int(11) NOT NULL,
+  `id_alumno` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -125,6 +180,18 @@ INSERT INTO `departamentos` (`id`, `nombre`, `descripcion`, `telefono`, `id_camp
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `materia`
+--
+
+CREATE TABLE `materia` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `grado` varchar(5) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `personal`
 --
 
@@ -154,16 +221,46 @@ INSERT INTO `personal` (`id`, `nombre`, `paterno`, `materno`, `fechaNacimiento`,
 --
 
 --
+-- Indices de la tabla `alumnos`
+--
+ALTER TABLE `alumnos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_carrera` (`carrera_id`);
+
+--
 -- Indices de la tabla `area`
 --
 ALTER TABLE `area`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `calificacion`
+--
+ALTER TABLE `calificacion`
+  ADD UNIQUE KEY `id_clase` (`id_clase`),
+  ADD KEY `FK_alumno` (`id_alumno`);
+
+--
 -- Indices de la tabla `campus`
 --
 ALTER TABLE `campus`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `carrera`
+--
+ALTER TABLE `carrera`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_coordinador` (`coordinado_id`);
+
+--
+-- Indices de la tabla `clase`
+--
+ALTER TABLE `clase`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_materia` (`id_materia`),
+  ADD KEY `FK_profesor` (`id_profesor`) USING BTREE,
+  ADD KEY `FK_alumno` (`id_alumno`);
 
 --
 -- Indices de la tabla `country`
@@ -179,6 +276,12 @@ ALTER TABLE `departamentos`
   ADD KEY `FK` (`id_campus`);
 
 --
+-- Indices de la tabla `materia`
+--
+ALTER TABLE `materia`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `personal`
 --
 ALTER TABLE `personal`
@@ -191,10 +294,16 @@ ALTER TABLE `personal`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `alumnos`
+--
+ALTER TABLE `alumnos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `area`
 --
 ALTER TABLE `area`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `campus`
@@ -203,10 +312,28 @@ ALTER TABLE `campus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `carrera`
+--
+ALTER TABLE `carrera`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `clase`
+--
+ALTER TABLE `clase`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
 ALTER TABLE `departamentos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `materia`
+--
+ALTER TABLE `materia`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `personal`
@@ -217,6 +344,33 @@ ALTER TABLE `personal`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `alumnos`
+--
+ALTER TABLE `alumnos`
+  ADD CONSTRAINT `fk_id_carrera` FOREIGN KEY (`carrera_id`) REFERENCES `carrera` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `calificacion`
+--
+ALTER TABLE `calificacion`
+  ADD CONSTRAINT `fk_id_alumnos` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_id_clase` FOREIGN KEY (`id_clase`) REFERENCES `clase` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `carrera`
+--
+ALTER TABLE `carrera`
+  ADD CONSTRAINT `fk_id_coordinador` FOREIGN KEY (`coordinado_id`) REFERENCES `personal` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `clase`
+--
+ALTER TABLE `clase`
+  ADD CONSTRAINT `fk_id_alumno` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_id_materia` FOREIGN KEY (`id_materia`) REFERENCES `materia` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_id_profesor` FOREIGN KEY (`id_profesor`) REFERENCES `personal` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `departamentos`
