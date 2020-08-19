@@ -60,13 +60,9 @@ php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvid
 
 ```bash
 php artisan config:cache
-```
 
-```bash
 php artisan config:clear
-```
 
-```bash
 php artisan cache:clear
 ```
 
