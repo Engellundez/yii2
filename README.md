@@ -76,7 +76,7 @@ php artisan migrate:fresh --seed
 <p>Ahora podremos observar en nuestra base de datos no solo las 5 tablas que agrega el modulo de roles y permisos, si no que además si nos vamos al diseñador de bases de datos podemos ver que estan relacionadas adecuadamanete, a excepcion del Usuario. <b>¿Porqué?. Cuestion de nombre solamente</b></p>
 
 <h3>Trabajar con Middlewares</h3>
-<p>Para poder trabajar con middlewares es necesario ponerle un alias a nuestro middleware para poder llamar sin ningun tipo de problema lo primero que haremos es entrar al archivo </p>`app/Http/Kernel.php`<p> lo que agregaremos es el siguiente codigo:</p>
+<p style="display:inline;">Para poder trabajar con middlewares es necesario ponerle un alias a nuestro middleware para poder llamar sin ningun tipo de problema lo primero que haremos es entrar al archivo </p> `app/Http/Kernel.php` <p style="display:inline;"> lo que agregaremos es el siguiente codigo:</p>
 
 ```php
 protected $routeMiddleware = [
@@ -87,7 +87,7 @@ protected $routeMiddleware = [
 ];
 ```
 
-<p>Una vez puesto el codigo podremos llamarlo en el archivo </p>`app/routes/web.php`<p> agregando el middleware como se muestra en el siguiente ejemplo</p>
+<p style="display:inline;">Una vez puesto el codigo podremos llamarlo en el archivo </p> `app/routes/web.php` <p style="display:inline;"> agregando el middleware como se muestra en el siguiente ejemplo</p>
 
 ```php
 //ejemplo
