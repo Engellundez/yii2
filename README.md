@@ -1,233 +1,112 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 Basic Project Template</h1>
-    <br>
-</p>
+<h1 align="center">Tutorial y proyectos en laravel desde cero</h1>
+<h3>Crear nuevo proyecto</h3>
+<p>Para crar un nuevo proyecto de laravel lo primero que debes de descargar composer</p>
+<p>para instalarlo debemos correr el siguiente comando</p>
 
-Yii 2 Basic Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-rapidly creating small projects.
-
-The template contains the basic features including user login/logout and a contact page.
-It includes all commonly used configurations that would allow you to focus on adding new
-features to your application.
-
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Build Status](https://travis-ci.com/yiisoft/yii2-app-basic.svg?branch=master)](https://travis-ci.com/yiisoft/yii2-app-basic)
-
-DIRECTORY STRUCTURE
--------------------
-
-      assets/             contains assets definition
-      commands/           contains console commands (controllers)
-      config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
-      web/                contains the entry script and Web resources
-
-
-
-REQUIREMENTS
-------------
-
-The minimum requirement by this project template that your Web server supports PHP 5.6.0.
-
-
-INSTALLATION
-------------
-
-### Install via Composer
-
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this project template using the following command:
-
-~~~
-composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
-
-Set cookie validation key in `config/web.php` file to some random secret string:
-
-```php
-'request' => [
-    // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-    'cookieValidationKey' => '<secret random string goes here>',
-],
+```bash
+composer global require laravel/installer
 ```
 
-You can then access the application through the following URL:
+<p>despues de esto vamos a correr el siguiente comando para poder crear nuestro proyecto</p>
 
-~~~
-http://localhost/basic/web/
-~~~
+```bash
+laravel new <nombre>
+```
+<h3>Crear Autenticacion</h3>
+<p>ya que se alla instalado el proyecto podemos verlo en el aid de tu preferencia en mi caso yo voy a usar <b>Visual Studio Code</b> por su practicidad y facilidad de uso</p>
+<p>ahora lo que sigue es instalarle la autenticación para que cuente con usuarios usando los siguientes comandos</p>
 
+```bash
+cd <nombre>
 
-### Install with Docker
+composer require laravel/ui
 
-Update your vendor packages
+php artisan ui vue --auth
+```
+<p>Ahora vamos a correr los siguientes 2 comandos</p>
 
-    docker-compose run --rm php composer update --prefer-dist
-    
-Run the installation triggers (creating cookie validation code)
+```bash
+npm install
 
-    docker-compose run --rm php composer install    
-    
-Start the container
+npm run dev
+```
 
-    docker-compose up -d
-    
-You can then access the application through the following URL:
+<p>Ahora podemos ver que nuestro proyecto ahora tienen varios archivos nuevos y si lo vemos ya corriendo en la web que tiene la opcion para agregar nuevos usuarios y te pide que inicies sesion para que puedas entrar a la ruta <b>home</b></p>
+<h3>Crear Roles y permisos</h3>
 
-    http://127.0.0.1:8000
+<p>Para crear roles podemos ir a la documentacion de laravel al apartado de <me>middleware</me> pero en este tutorial vamos a hacer uso de un paquete de roles y servicios que se llama <a href="https://github.com/spatie/laravel-permission"><b>Spatie laravel Permission</b></a> para facilitar esta parte</p>
+<p>para instalar este paquete usaremos el siguiente comando:</p>
 
-**NOTES:** 
-- Minimum required Docker engine version `17.04` for development (see [Performance tuning for volume mounts](https://docs.docker.com/docker-for-mac/osxfs-caching/))
-- The default configuration uses a host-volume in your home directory `.docker-composer` for composer caches
+```bash
+composer require spatie/laravel-permission
+```
 
-
-CONFIGURATION
--------------
-
-### Database
-
-Edit the file `config/db.php` with real data, for example:
+<p>Una vez que se termine de instalar el siguiente paso es agregarlo a la configuracion de laravel como un proveedor de la siguiente forma</p>
+<p>Entraremos a <em>Config/app.php</emm> y en la parte de <b><em>providers</em></b> hasta abajo agregaremos el comando</p>
 
 ```php
-return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '1234',
-    'charset' => 'utf8',
+Spatie\Permission\PermissionServiceProvider::class,
+```
+
+<p>Ya con la linea agregada lo siguiente que haremos es correr el siguiente comando:</p>
+
+```bash
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+```
+
+<p>Esto para que tengamos la migración adecuada en nuestro proyecto y a demas tener tambien nuestro archivo de nombre <b>permission.php</b> en nuestra carpeta de configuración.</p>
+
+<p>Además de este comando correremos tambien los siguientes 3 comandos para que la configuración de <em>app.php</em> tambien se actualice a la par.</p>
+
+```bash
+php artisan config:cache
+```
+
+```bash
+php artisan config:clear
+```
+
+```bash
+php artisan cache:clear
+```
+
+<p>Ahora solo modificaremos la migración para que tenga descripción ya que no cuenta con ella y unos <em>seeders</em> para que se lleve de una vez algunos roles y permisos que van a existir (esto se puede hacer hasta que todo el proyecto este definido).</p>
+<p>Una vez definido los Usuarios que usaran el sistema y los roles y permisos existentes vamos a ejecutar el siguiente comando:</p>
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+<p>Ahora podremos observar en nuestra base de datos no solo las 5 tablas que agrega el modulo de roles y permisos, si no que además si nos vamos al diseñador de bases de datos podemos ver que estan relacionadas adecuadamanete, a excepcion del Usuario. <b>¿Porqué?. Cuestion de nombre solamente</b></p>
+
+<h3>Trabajar con Middlewares</h3>
+<p>Para poder trabajar con middlewares es necesario ponerle un alias a nuestro middleware para poder llamar sin ningun tipo de problema lo primero que haremos es entrar al archivo `app/Http/Kernel.php` lo que agregaremos es el siguiente codigo:</p>
+
+```php
+protected $routeMiddleware = [
+    // ...
+    'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 ];
 ```
 
-**NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
-- Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
+<p>Una vez puesto el codigo podremos llamarlo en el archivo `app/routes/web.php` agregando el middleware como se muestra en el siguiente ejemplo</p>
 
+```php
+//ejemplo
+Route::get('/home', 'HomeController@index')->name('home')->middleware('role:Invitado|Super Admin');
 
-TESTING
--------
+//por agregar
 
-Tests are located in `tests` directory. They are developed with [Codeception PHP Testing Framework](http://codeception.com/).
-By default there are 3 test suites:
+//Para roles
+->middleware('role:<rol1>|<rol2>');
 
-- `unit`
-- `functional`
-- `acceptance`
+//Para Permisos
+->middleware('permission:<permiso1>|<permiso2>');
 
-Tests can be executed by running
-
-```
-vendor/bin/codecept run
-```
-
-The command above will execute unit and functional tests. Unit tests are testing the system components, while functional
-tests are for testing user interaction. Acceptance tests are disabled by default as they require additional setup since
-they perform testing in real browser. 
-
-
-### Running  acceptance tests
-
-To execute acceptance tests do the following:  
-
-1. Rename `tests/acceptance.suite.yml.example` to `tests/acceptance.suite.yml` to enable suite configuration
-
-2. Replace `codeception/base` package in `composer.json` with `codeception/codeception` to install full featured
-   version of Codeception
-
-3. Update dependencies with Composer 
-
-    ```
-    composer update  
-    ```
-
-4. Download [Selenium Server](http://www.seleniumhq.org/download/) and launch it:
-
-    ```
-    java -jar ~/selenium-server-standalone-x.xx.x.jar
-    ```
-
-    In case of using Selenium Server 3.0 with Firefox browser since v48 or Google Chrome since v53 you must download [GeckoDriver](https://github.com/mozilla/geckodriver/releases) or [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) and launch Selenium with it:
-
-    ```
-    # for Firefox
-    java -jar -Dwebdriver.gecko.driver=~/geckodriver ~/selenium-server-standalone-3.xx.x.jar
-    
-    # for Google Chrome
-    java -jar -Dwebdriver.chrome.driver=~/chromedriver ~/selenium-server-standalone-3.xx.x.jar
-    ``` 
-    
-    As an alternative way you can use already configured Docker container with older versions of Selenium and Firefox:
-    
-    ```
-    docker run --net=host selenium/standalone-firefox:2.53.0
-    ```
-
-5. (Optional) Create `yii2_basic_tests` database and update it by applying migrations if you have them.
-
-   ```
-   tests/bin/yii migrate
-   ```
-
-   The database configuration can be found at `config/test_db.php`.
-
-
-6. Start web server:
-
-    ```
-    tests/bin/yii serve
-    ```
-
-7. Now you can run all available tests
-
-   ```
-   # run all available tests
-   vendor/bin/codecept run
-
-   # run acceptance tests
-   vendor/bin/codecept run acceptance
-
-   # run only unit and functional tests
-   vendor/bin/codecept run unit,functional
-   ```
-
-### Code coverage support
-
-By default, code coverage is disabled in `codeception.yml` configuration file, you should uncomment needed rows to be able
-to collect code coverage. You can run your tests and collect coverage with the following command:
+//Para ambos
+->middleware('role_or_permission:<rol1>|<permiso1>|<permiso2><rol2>');
+//realmente no importa el orden siempre que sea separado por un '|' para diferenciar todo
 
 ```
-#collect coverage for all tests
-vendor/bin/codecept run -- --coverage-html --coverage-xml
-
-#collect coverage only for unit tests
-vendor/bin/codecept run unit -- --coverage-html --coverage-xml
-
-#collect coverage for unit and functional tests
-vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
-```
-
-You can see code coverage output under the `tests/_output` directory.
